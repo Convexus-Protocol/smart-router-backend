@@ -1,0 +1,8 @@
+sqlmodel
+fastapi
+uvicorn[standard]
+iconsdk
+requests
+convexus
+loguru
+types-requests

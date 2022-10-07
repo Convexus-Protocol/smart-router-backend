@@ -1,0 +1,11 @@
+venv
+*.db
+*.pyc
+__pycache__
+*.egg-info
+logs
+dist
+build
+.vscode
+*.code-workspace
+.mypy_cache
