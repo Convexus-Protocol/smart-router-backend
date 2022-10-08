@@ -42,6 +42,7 @@ class RouteInfo(SQLModel):
 
 class Trade(SQLModel):
   swaps: List[RouteInfo]
+  tradeType: int
 
 
 def currencyamount_sdk_to_model(amount: CurrencyAmountSDK) -> CurrencyAmount:
@@ -87,5 +88,6 @@ def routeinfo_sdk_to_model(swap: RouteInfoSDK) -> RouteInfo:
 
 def trade_sdk_to_model(trade: TradeSDK) -> Trade:
   return Trade(
-    swaps=list(map(routeinfo_sdk_to_model, trade.swaps))
+    swaps=list(map(routeinfo_sdk_to_model, trade.swaps)),
+    tradeType=int(trade.tradeType.value)
   )
