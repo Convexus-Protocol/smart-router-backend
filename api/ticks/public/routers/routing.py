@@ -64,10 +64,8 @@ async def bestTradeExactIn(*, currencyInAddress: str, currencyOutAddress: str, c
 
     # Convert PoolModel to SDK Pool if any tick
     if ticks:
-      print(f"ticks for {db_pool.address}")
       pools[db_pool.address] = pool_model_to_sdk(db_pool, token0, token1, ticks)
   
-  print(len(pools))
   poolProvider = RoutingPoolFactoryProvider(pools)
   currencyAmountIn = CurrencyAmount(tokenIn, currencyAmountIn)
   trades = Trade.bestTradeExactIn(poolProvider, list(pools.values()), currencyAmountIn=currencyAmountIn, currencyOut=tokenOut)
