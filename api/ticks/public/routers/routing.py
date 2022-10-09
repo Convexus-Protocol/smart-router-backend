@@ -1,7 +1,4 @@
 from typing import Dict, List
-from api.ticks.transforms.pool import pool_model_to_sdk
-from api.ticks.transforms.tick import tick_model_to_sdk
-from api.ticks.transforms.token import token_model_to_sdk
 from database.models.pool import Pool as PoolModel
 from api.ticks.dependencies import get_database_session
 from fastapi import APIRouter, HTTPException, Depends
@@ -41,8 +38,8 @@ class RoutingPoolFactoryProvider(PoolFactoryProvider):
 async def bestTradeExactIn(*, currencyInAddress: str, currencyOutAddress: str, currencyAmountIn: int):
   session = next(router.dependencies[0].dependency())
 
-  tokenIn = token_model_to_sdk(session.get(TokenModel, currencyInAddress))
-  tokenOut = token_model_to_sdk(session.get(TokenModel, currencyOutAddress))
+  tokenIn = session.get(TokenModel, currencyInAddress).to_sdk()
+  tokenOut = session.get(TokenModel, currencyOutAddress).to_sdk()
   
   if not tokenIn:
     raise HTTPException(status_code=404, detail="tokenIn not found")
@@ -56,15 +53,15 @@ async def bestTradeExactIn(*, currencyInAddress: str, currencyOutAddress: str, c
   pools = {}
   for db_pool in db_pools:
     # Convert TokenModel to SDK Token
-    token0 = token_model_to_sdk(session.get(TokenModel, db_pool.token0))
-    token1 = token_model_to_sdk(session.get(TokenModel, db_pool.token1))
+    token0: Token = session.get(TokenModel, db_pool.token0).to_sdk()
+    token1: Token = session.get(TokenModel, db_pool.token1).to_sdk()
 
     # Convert TicksModel to SDK Ticks
-    ticks = list(map(tick_model_to_sdk, db_pool.ticks))
+    ticks = list(map(lambda t: t.to_sdk(), db_pool.ticks))
 
     # Convert PoolModel to SDK Pool if any tick
     if ticks:
-      pools[db_pool.address] = pool_model_to_sdk(db_pool, token0, token1, ticks)
+      pools[db_pool.address] = db_pool.to_sdk(token0, token1, ticks)
   
   poolProvider = RoutingPoolFactoryProvider(pools)
   currencyAmountIn = CurrencyAmount(tokenIn, currencyAmountIn)

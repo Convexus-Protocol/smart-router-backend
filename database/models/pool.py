@@ -5,6 +5,9 @@ from sqlalchemy import exists
 from database.models.tick import Tick, TickRead
 from utils.typing.bigint import BigInt
 
+from convexus.sdkcore import Token as TokenSDK
+from convexus.sdk import Pool as PoolSDK, NoTickDataProvider
+
 class IntrinsicsBase(SQLModel):
   sqrtPriceX96: Optional[BigInt] = Field(default=None)
   tick: Optional[int] = Field(default=None)
@@ -22,6 +25,20 @@ class Pool(PoolBase, SQLModel, table=True):
   @staticmethod
   def exists(session: Session, address: str) -> bool:
     return session.query(exists().where(Pool.address==address)).scalar()
+
+  def to_sdk (
+    self, 
+    token0: TokenSDK, token1: TokenSDK, 
+    ticks: List[Tick] = NoTickDataProvider()
+  ) -> PoolSDK:
+    return PoolSDK (
+      token0, token1, 
+      self.fee, 
+      self.sqrtPriceX96, 
+      self.liquidity, 
+      self.tick, 
+      ticks
+    )
 
 class PoolRead(PoolBase):
   pass

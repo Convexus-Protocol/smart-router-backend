@@ -3,6 +3,7 @@ from sqlmodel import Field, SQLModel, Session
 from sqlalchemy import exists
 
 from utils.typing.bigint import BigInt
+from convexus.sdk import Tick as TickSDK, TickConstructorArgs
 
 class TickBase(SQLModel):
   index: int = Field(primary_key=True)
@@ -15,6 +16,9 @@ class Tick(TickBase, table=True):
   @staticmethod
   def exists(session: Session, index: int, poolAddress: str) -> bool:
     return session.query(exists().where(Tick.index==index, Tick.poolAddress==poolAddress)).scalar()
+
+  def to_sdk(self):
+    return TickSDK(TickConstructorArgs(self.index, self.liquidityGross, self.liquidityNet)) 
 
 class TickRead(TickBase):
   pass
