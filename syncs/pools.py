@@ -1,7 +1,7 @@
 import asyncio
 
-from api.ticks.public.client import Client as RestPublicClient
-from api.ticks.admin.client import Client as RestAdminClient
+from api.public.client import Client as RestPublicClient
+from api.admin.client import Client as RestAdminClient
 from database.models.sync import SyncSet
 from database.models.token import TokenSet
 from syncs.base import SynchronizerBase

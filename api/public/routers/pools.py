@@ -1,5 +1,5 @@
 from database.models.pool import Pool, PoolRead, PoolReadWithTicks, PoolsRead
-from api.ticks.dependencies import get_database_session
+from api.dependencies import get_database_session
 from fastapi import APIRouter, HTTPException, Depends
 from sqlmodel import select
 

@@ -1,5 +1,5 @@
 from database.models.token import Token, TokenRead
-from api.ticks.dependencies import get_database_session
+from api.dependencies import get_database_session
 from fastapi import APIRouter, HTTPException, Depends
 
 router = APIRouter (

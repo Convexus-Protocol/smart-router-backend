@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from api.ticks.admin.routers import syncs, tokens, pools, ticks
-from api.ticks.dependencies import create_database
+from api.admin.routers import syncs, tokens, pools, ticks
+from api.dependencies import create_database
 
 # Load DB
 create_database()

@@ -1,6 +1,6 @@
 from typing import Dict, List
 from database.models.pool import Pool as PoolModel
-from api.ticks.dependencies import get_database_session
+from api.dependencies import get_database_session
 from fastapi import APIRouter, HTTPException, Depends
 from sqlmodel import select
 from convexus.sdk import Trade, Pool, PoolFactoryProvider, Token, FeeAmount, CurrencyAmount

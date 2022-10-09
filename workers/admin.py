@@ -5,7 +5,7 @@ from settings import AdminPoolsSettings
 
 if __name__ == "__main__":
   uvicorn.run (
-    "api.ticks.admin.main:app",
+    "api.admin.main:app",
     host=AdminPoolsSettings.host,
     port=AdminPoolsSettings.port,
     workers=1,

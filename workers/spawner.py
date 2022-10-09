@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Coroutine
 from loguru import logger
 
-from api.ticks.public.client import Client as RestPublicClient
+from api.public.client import Client as RestPublicClient
 from settings import SpawnerSettings
 from syncs.pools import start as pools_start
 from syncs.ticks import start as ticks_start

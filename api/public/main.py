@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from api.ticks.public.routers import tokens, pools, ticks, routing
-from api.ticks.dependencies import create_database
+from api.public.routers import tokens, pools, ticks, routing
+from api.dependencies import create_database
 from fastapi.middleware.cors import CORSMiddleware
 
 # Load DB

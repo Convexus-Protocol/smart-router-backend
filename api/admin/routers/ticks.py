@@ -1,5 +1,5 @@
 from database.models.tick import Tick, TickSet, TickDelete
-from api.ticks.dependencies import get_database_session
+from api.dependencies import get_database_session
 from fastapi import APIRouter, Depends
 from sqlmodel import update, delete
 

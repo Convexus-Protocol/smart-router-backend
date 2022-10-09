@@ -1,4 +1,4 @@
-from api.ticks.admin.client import Client
+from api.admin.client import Client
 from utils.score import score_initial_deployment
 from database.models.sync import SyncSet
 import json

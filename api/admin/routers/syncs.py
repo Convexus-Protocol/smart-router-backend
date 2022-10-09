@@ -1,5 +1,5 @@
 from database.models.sync import Sync, SyncRead, SyncSet
-from api.ticks.dependencies import get_database_session
+from api.dependencies import get_database_session
 from fastapi import APIRouter, HTTPException, Depends
 from sqlmodel import update
 

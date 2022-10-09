@@ -1,6 +1,6 @@
 import asyncio
 
-from api.ticks.admin.client import Client as RestAdminClient
+from api.admin.client import Client as RestAdminClient
 from database.models.sync import SyncSet
 from syncs.base import SynchronizerBase
 from syncs.eventlogs import IntrinsicsUpdate
