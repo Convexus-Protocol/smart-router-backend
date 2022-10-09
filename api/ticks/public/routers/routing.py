@@ -4,7 +4,7 @@ from api.ticks.dependencies import get_database_session
 from fastapi import APIRouter, HTTPException, Depends
 from sqlmodel import select
 from convexus.sdk import Trade, Pool, PoolFactoryProvider, Token, FeeAmount, CurrencyAmount
-from database.models.pydantics import trade_sdk_to_model, Trade as TradeModel
+from database.models.response import Trade as TradeResponse
 from database.models.token import Token as TokenModel
 
 
@@ -34,7 +34,7 @@ class RoutingPoolFactoryProvider(PoolFactoryProvider):
     raise Exception("Pool not found")
 
 
-@router.get("/bestTradeExactIn", response_model=List[TradeModel])
+@router.get("/bestTradeExactIn", response_model=List[TradeResponse])
 async def bestTradeExactIn(*, currencyInAddress: str, currencyOutAddress: str, currencyAmountIn: int):
   session = next(router.dependencies[0].dependency())
 
@@ -77,4 +77,4 @@ async def bestTradeExactIn(*, currencyInAddress: str, currencyOutAddress: str, c
   trades = Trade.bestTradeExactIn(poolProvider, list(pools.values()), currencyAmountIn=currencyAmountIn, currencyOut=tokenOut)
   
   # Convert SDK to Pydantic
-  return list(map(trade_sdk_to_model, trades))
+  return list(map(TradeResponse.from_sdk, trades))
