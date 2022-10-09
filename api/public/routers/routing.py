@@ -3,7 +3,7 @@ from database.models.pool import Pool as PoolModel
 from api.dependencies import get_database_session
 from fastapi import APIRouter, HTTPException, Depends
 from sqlmodel import select
-from convexus.sdk import Trade, Pool, PoolFactoryProvider, Token, FeeAmount, CurrencyAmount
+from convexus.sdk import Trade, Pool, PoolFactoryProvider, Token, FeeAmount, CurrencyAmount, BestTradeOptions
 from database.models.response import Trade as TradeResponse
 from database.models.token import Token as TokenModel
 
@@ -74,7 +74,7 @@ async def bestTradeExactIn(*, currencyInAddress: str, currencyOutAddress: str, c
 
   poolProvider = RoutingPoolFactoryProvider(pools)
   currencyAmountIn = CurrencyAmount(tokenIn, currencyAmountIn)
-  trades = Trade.bestTradeExactIn(poolProvider, list(pools.values()), currencyAmountIn=currencyAmountIn, currencyOut=tokenOut)
+  trades = Trade.bestTradeExactIn(poolProvider, list(pools.values()), currencyAmountIn=currencyAmountIn, currencyOut=tokenOut, options=BestTradeOptions(maxHops=4))
   
   # Convert SDK to Pydantic
   return list(map(TradeResponse.from_sdk, trades))
