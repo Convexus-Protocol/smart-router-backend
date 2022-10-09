@@ -62,5 +62,5 @@ def start():
     SynchronizerPoolsSettings.event
   )
 
-  return synchronizer.run()
+  asyncio.run(synchronizer.run())
 

@@ -14,8 +14,8 @@ class SynchronizerBase(metaclass=ABCMeta):
     self.address = address
     self.event = event
     self.service = RouterService(endpoint)
-    self.ws_to_chain = Queue()
-    self.chain_to_db = Queue()
+    self.ws_to_chain: Queue = Queue()
+    self.chain_to_db: Queue = Queue()
 
   async def ws_listener(self, queue: Queue):
     """

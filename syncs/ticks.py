@@ -47,4 +47,5 @@ def start(address: str):
     address,
     SynchronizerTicksSettings.event)
 
-  return synchronizer.run()
+  asyncio.run(synchronizer.run())
+

@@ -38,4 +38,5 @@ def start(address: str):
     address,
     SynchronizerIntrinsicsSettings.event)
 
-  return synchronizer.run()
+  asyncio.run(synchronizer.run())
+
