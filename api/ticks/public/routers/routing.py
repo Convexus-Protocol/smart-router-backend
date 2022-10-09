@@ -62,6 +62,8 @@ async def bestTradeExactIn(*, currencyInAddress: str, currencyOutAddress: str, c
 
     # Convert TicksModel to SDK Ticks
     ticks = list(map(lambda t: t.to_sdk(), db_pool.ticks))
+    # Sort ticks
+    ticks = sorted(ticks, key=lambda x: x.index)
 
     # Convert PoolModel to SDK Pool if any tick
     if ticks:
