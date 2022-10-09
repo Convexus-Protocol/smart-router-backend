@@ -20,26 +20,38 @@ rest_admin_client = RestAdminClient()
 class SynchronizerPools(SynchronizerBase):
 
   async def tokens_set(self, address: str):
+    # Check if already in DB
     if rest_public_client.tokens_get(address).status_code == 404:
+      # Get Tokens information from contract
       contract = Contract(address, IIRC2, self.service.icon, self.service.icon, 0)
       token = await Token.fromContract(contract)
+      # Update DB
       rest_admin_client.tokens_set(TokenSet(address=token.address, decimals=token.decimals, name=token.name, symbol=token.symbol))
 
   async def db_updater(self, queue: asyncio.Queue):
     height, eventlog = await queue.get()
+    
+    # Parse event
     poolCreated = PoolCreated.fromEventLog(eventlog)
+    
+    # Update Pool DB
     poolSet = PoolSet(
       address=poolCreated.pool, 
       token0=poolCreated.token0, 
       token1=poolCreated.token1, 
       fee=poolCreated.fee)
-    syncSet = SyncSet(name=SynchronizerPoolsSettings.syncname, height=height)
     rest_admin_client.pools_set(poolSet)
+    
+    # Update Sync height DB
+    syncSet = SyncSet(name=SynchronizerPoolsSettings.syncname, height=height)
     rest_admin_client.syncs_set(syncSet)
+    
+    # Create tokens if not already in DB
     asyncio.create_task(self.tokens_set(poolSet.token0))
     asyncio.create_task(self.tokens_set(poolSet.token1))
 
 def start():
+  # Read Sync latest height
   height = get_latest_height(rest_admin_client, SynchronizerPoolsSettings.syncname, SynchronizerPoolsSettings.address)
 
   synchronizer = SynchronizerPools(
