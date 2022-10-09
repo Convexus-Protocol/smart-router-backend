@@ -29,27 +29,28 @@ class SynchronizerPools(SynchronizerBase):
       rest_admin_client.tokens_set(TokenSet(address=token.address, decimals=token.decimals, name=token.name, symbol=token.symbol))
 
   async def db_updater(self, queue: asyncio.Queue):
-    height, eventlog = await queue.get()
+    height, eventlogs = await queue.get()
     
-    # Parse event
-    poolCreated = PoolCreated.fromEventLog(eventlog)
-    
-    # Update Pool DB
-    poolSet = PoolSet(
-      address=poolCreated.pool, 
-      token0=poolCreated.token0, 
-      token1=poolCreated.token1, 
-      fee=poolCreated.fee)
-    rest_admin_client.pools_set(poolSet)
-    
+    for eventlog in eventlogs:
+      # Parse event
+      poolCreated = PoolCreated.fromEventLog(eventlog)
+      
+      # Update Pool DB
+      poolSet = PoolSet(
+        address=poolCreated.pool, 
+        token0=poolCreated.token0, 
+        token1=poolCreated.token1, 
+        fee=poolCreated.fee)
+      rest_admin_client.pools_set(poolSet)
+      
+      # Create tokens if not already in DB
+      asyncio.create_task(self.tokens_set(poolSet.token0))
+      asyncio.create_task(self.tokens_set(poolSet.token1))
+
     # Update Sync height DB
     syncSet = SyncSet(name=SynchronizerPoolsSettings.syncname, height=height)
     rest_admin_client.syncs_set(syncSet)
-    
-    # Create tokens if not already in DB
-    asyncio.create_task(self.tokens_set(poolSet.token0))
-    asyncio.create_task(self.tokens_set(poolSet.token1))
-
+      
 def start():
   # Read Sync latest height
   height = get_latest_height(rest_admin_client, SynchronizerPoolsSettings.syncname, SynchronizerPoolsSettings.address)

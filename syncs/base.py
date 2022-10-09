@@ -32,7 +32,6 @@ class SynchronizerBase(metaclass=ABCMeta):
           while True:
             packet = await websocket.recv()
             await queue.put(json.loads(packet))
-            await asyncio.sleep(0.1)
       except Exception as e:
         logger.error(repr(e))
 
@@ -48,10 +47,10 @@ class SynchronizerBase(metaclass=ABCMeta):
           block = self.service.icon.get_block(height)
           tx_index = int(data['index'], 16)
           txresult = self.service.icon.get_transaction_result(block['confirmed_transaction_list'][tx_index]['txHash'])
-          for event in data['events']:
-            self.height = height + 1
-            await outqueue.put((self.height, txresult['eventLogs'][int(event, 16)]))
-            await asyncio.sleep(0.1)
+          self.height = height + 1
+          # Put all the events in a single task in order to modify the DB atomically
+          eventlogs = list(map(lambda e: txresult['eventLogs'][int(e, 16)], data['events']))
+          await outqueue.put((self.height, eventlogs))
       except Exception as e:
         logger.error(repr(e))
 
@@ -59,7 +58,6 @@ class SynchronizerBase(metaclass=ABCMeta):
     while True:
       try:
         await self.db_updater(queue)
-        await asyncio.sleep(0.1)
       except Exception as e:
         logger.error(repr(e))
 

@@ -38,14 +38,18 @@ class RoutingPoolFactoryProvider(PoolFactoryProvider):
 async def bestTradeExactIn(*, currencyInAddress: str, currencyOutAddress: str, currencyAmountIn: int):
   session = next(router.dependencies[0].dependency())
 
-  tokenIn = session.get(TokenModel, currencyInAddress).to_sdk()
-  tokenOut = session.get(TokenModel, currencyOutAddress).to_sdk()
+  tokenIn = session.get(TokenModel, currencyInAddress)
+  tokenOut = session.get(TokenModel, currencyOutAddress)
   
   if not tokenIn:
     raise HTTPException(status_code=404, detail="tokenIn not found")
   
   if not tokenOut:
     raise HTTPException(status_code=404, detail="tokenOut not found")
+  
+  # Convert to SDK objects
+  tokenIn = tokenIn.to_sdk()
+  tokenOut = tokenOut.to_sdk()
   
   # Get all pools
   db_pools: List[PoolModel] = session.exec(select(PoolModel)).all()
