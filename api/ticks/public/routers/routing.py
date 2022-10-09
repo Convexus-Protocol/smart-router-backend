@@ -67,6 +67,9 @@ async def bestTradeExactIn(*, currencyInAddress: str, currencyOutAddress: str, c
     if ticks:
       pools[db_pool.address] = db_pool.to_sdk(token0, token1, ticks)
   
+  if not len(pools):
+    raise HTTPException(status_code=404, detail="Pools not found")
+
   poolProvider = RoutingPoolFactoryProvider(pools)
   currencyAmountIn = CurrencyAmount(tokenIn, currencyAmountIn)
   trades = Trade.bestTradeExactIn(poolProvider, list(pools.values()), currencyAmountIn=currencyAmountIn, currencyOut=tokenOut)
