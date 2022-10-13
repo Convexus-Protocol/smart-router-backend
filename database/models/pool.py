@@ -36,7 +36,7 @@ class Pool(PoolBase, SQLModel, table=True):
       self.fee, 
       self.sqrtPriceX96 if self.sqrtPriceX96 else '0', 
       self.liquidity if self.liquidity else '0', 
-      self.tick if self.tick else '0', 
+      self.tick if self.tick else 0, 
       ticks
     )
 
