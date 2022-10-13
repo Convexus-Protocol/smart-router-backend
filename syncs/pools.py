@@ -53,12 +53,12 @@ class SynchronizerPools(SynchronizerBase):
       
 def start():
   # Read Sync latest height
-  height = get_latest_height(rest_admin_client, SynchronizerPoolsSettings.syncname, SynchronizerPoolsSettings.address)
+  height = get_latest_height(rest_admin_client, SynchronizerPoolsSettings.syncname, SynchronizerPoolsSettings.factoryAddress)
 
   synchronizer = SynchronizerPools(
     BlockchainSettings.endpoint, 
     height, 
-    SynchronizerPoolsSettings.address, 
+    SynchronizerPoolsSettings.factoryAddress, 
     SynchronizerPoolsSettings.event
   )
 
