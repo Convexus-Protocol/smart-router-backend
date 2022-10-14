@@ -16,7 +16,7 @@ class BlockchainSettings:
 
 @dataclass
 class SynchronizerPoolsSettings:
-  factoryAddress: str = "cxacfcb969604302970ae71f090cdd050ac7af2b13"
+  factoryAddress: str = "cx5e0f1b97cfb7b2c83950200b2bc5cb723bb80694"
   event: str = "PoolCreated(Address,Address,int,int,Address)"
   syncname: str = "pools"
 
