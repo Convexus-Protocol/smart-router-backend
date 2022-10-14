@@ -35,7 +35,7 @@ class SynchronizerBase(metaclass=ABCMeta):
       except Exception as e:
         logger.error(repr(e))
 
-  async def blockchain_reader(self, inqueue, outqueue):
+  async def blockchain_reader(self, inqueue: asyncio.Queue, outqueue: asyncio.Queue):
     """
       Listen to the event info in the `inqueue` and output the eventlog data to the `outqueue`
     """
