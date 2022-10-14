@@ -3,7 +3,7 @@ import asyncio
 from api.admin.client import Client as RestAdminClient
 from database.models.sync import SyncSet
 from syncs.base import SynchronizerBase
-from syncs.eventlogs import IntrinsicsUpdate
+from convexus.sdk import IntrinsicsUpdate
 
 from database.models.pool import IntrinsicsSet
 from settings import BlockchainSettings, SynchronizerIntrinsicsSettings

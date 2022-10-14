@@ -3,7 +3,7 @@ import asyncio
 from api.admin.client import Client as RestAdminClient
 from database.models.sync import SyncSet
 from syncs.base import SynchronizerBase
-from syncs.eventlogs import TickUpdate
+from convexus.sdk import TickUpdate
 
 from database.models.tick import TickSet, TickDelete
 from settings import BlockchainSettings, SynchronizerTicksSettings

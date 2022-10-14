@@ -5,13 +5,12 @@ from api.admin.client import Client as RestAdminClient
 from database.models.sync import SyncSet
 from database.models.token import TokenSet
 from syncs.base import SynchronizerBase
-from syncs.eventlogs import PoolCreated
 
 from database.models.pool import PoolSet
 from settings import BlockchainSettings, SynchronizerPoolsSettings
 from utils.sync import get_latest_height
 
-from convexus.sdk import IIRC2, Token
+from convexus.sdk import IIRC2, Token, PoolCreated
 from convexus.icontoolkit import Contract
 
 rest_public_client = RestPublicClient()
