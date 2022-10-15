@@ -1,4 +1,4 @@
-from database.models.sync import Sync, SyncRead, SyncSet
+from database.models.sync import Sync, SyncGet, SyncSet
 from api.dependencies import get_database_session
 from fastapi import APIRouter, HTTPException, Depends
 from sqlmodel import update
@@ -10,7 +10,7 @@ router = APIRouter (
   dependencies=[Depends(get_database_session)]
 )
 
-@router.get("/get", response_model=SyncRead)
+@router.get("/get", response_model=SyncGet)
 async def read_sync(*, name: str):
   session = next(router.dependencies[0].dependency())
   sync = session.get(Sync, name)
@@ -27,7 +27,11 @@ def set_sync(*, sync: SyncSet):
       .where(Sync.name==sync.name)
       .values(**sync.__dict__))
   else:
-    session.add(Sync.from_orm(sync))
-  
-  session.commit()
+      session.add(Sync.from_orm(sync))
+
+  try:
+    session.commit()
+  except:
+    pass
+
   session.close()

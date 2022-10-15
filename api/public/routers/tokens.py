@@ -1,4 +1,4 @@
-from database.models.token import Token, TokenRead
+from database.models.token import Token, TokenGet
 from api.dependencies import get_database_session
 from fastapi import APIRouter, HTTPException, Depends
 
@@ -9,7 +9,7 @@ router = APIRouter (
   dependencies=[Depends(get_database_session)]
 )
 
-@router.get("/get", response_model=TokenRead)
+@router.get("/get", response_model=TokenGet)
 async def read_token(*, token_address: str):
   session = next(router.dependencies[0].dependency())
   token = session.get(Token, token_address)

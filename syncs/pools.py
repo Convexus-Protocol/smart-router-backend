@@ -28,7 +28,7 @@ class SynchronizerPools(SynchronizerBase):
       rest_admin_client.tokens_set(TokenSet(address=token.address, decimals=token.decimals, name=token.name, symbol=token.symbol))
 
   async def db_updater(self, queue: asyncio.Queue):
-    height, eventlogs = await queue.get()
+    block, eventlogs = await queue.get()
     
     for eventlog in eventlogs:
       # Parse event
@@ -47,7 +47,7 @@ class SynchronizerPools(SynchronizerBase):
       asyncio.create_task(self.tokens_set(poolSet.token1))
 
     # Update Sync height DB
-    syncSet = SyncSet(name=SynchronizerPoolsSettings.syncname, height=height)
+    syncSet = SyncSet(name=SynchronizerPoolsSettings.syncname, height=block['height'])
     rest_admin_client.syncs_set(syncSet)
       
 def start():

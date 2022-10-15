@@ -19,7 +19,7 @@ class Token(TokenBase, table=True):
   def to_sdk(self):
     return TokenSDK(self.address, self.decimals, self.symbol, self.name)
 
-class TokenRead(TokenBase):
+class TokenGet(TokenBase):
   pass
 
 class TokenSet(TokenBase):

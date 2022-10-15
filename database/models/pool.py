@@ -1,26 +1,24 @@
-from typing import List, Optional
+from typing import List
+from sqlalchemy.orm import RelationshipProperty
 from sqlmodel import Field, SQLModel, Session, Relationship
 from sqlalchemy import exists
+from database.models.intrinsics import Intrinsics
+from database.models.tick import Tick
 
-from database.models.tick import Tick, TickRead
-from utils.typing.bigint import BigInt
-
+from convexus.icontoolkit import BigintIsh
 from convexus.sdkcore import Token as TokenSDK
 from convexus.sdk import Pool as PoolSDK, NoTickDataProvider
 
-class IntrinsicsBase(SQLModel):
-  sqrtPriceX96: Optional[BigInt] = Field(default=None)
-  tick: Optional[int] = Field(default=None)
-  liquidity: Optional[BigInt] = Field(default=None)
+from utils.typing.bigint import BigInt
 
-class PoolBase(IntrinsicsBase, SQLModel):
+class PoolBase(SQLModel):
   address: str = Field(primary_key=True)
   token0: str = Field(foreign_key='token.address')
   token1: str = Field(foreign_key='token.address')
   fee: int
 
 class Pool(PoolBase, SQLModel, table=True):
-  ticks: List['Tick'] = Relationship()
+  ticks: List[Tick] = Relationship()
 
   @staticmethod
   def exists(session: Session, address: str) -> bool:
@@ -28,29 +26,25 @@ class Pool(PoolBase, SQLModel, table=True):
 
   def to_sdk (
     self, 
-    token0: TokenSDK, token1: TokenSDK, 
+    token0: TokenSDK, token1: TokenSDK,
+    sqrtPriceX96: BigintIsh,
+    liquidity: BigintIsh,
+    currentTick: int,
     ticks: List[Tick] = NoTickDataProvider()
   ) -> PoolSDK:
     return PoolSDK (
       token0, token1, 
       self.fee, 
-      self.sqrtPriceX96 if self.sqrtPriceX96 else '0', 
-      self.liquidity if self.liquidity else '0', 
-      self.tick if self.tick else 0, 
+      sqrtPriceX96,
+      liquidity,
+      currentTick,
       ticks
     )
 
-class PoolRead(PoolBase):
-  pass
-
-class PoolReadWithTicks(PoolRead):
-  ticks: List['TickRead'] = []
-
-class PoolsRead(SQLModel):
-  pools: List['PoolRead']
+class PoolGet(PoolBase):
+  sqrtPriceX96: BigInt
+  tick: int
+  liquidity: BigInt
 
 class PoolSet(PoolBase):
   pass
-
-class IntrinsicsSet(IntrinsicsBase):
-  address: str

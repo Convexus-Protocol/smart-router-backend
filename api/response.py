@@ -1,6 +1,6 @@
 from typing import List
 from convexus.icontoolkit.constants import BigintIsh
-from sqlmodel import SQLModel
+from pydantic import BaseModel
 
 from convexus.sdk import Trade as TradeSDK
 from convexus.sdk import RouteInfo as RouteInfoSDK
@@ -9,7 +9,7 @@ from convexus.sdk import Token as TokenSDK
 from convexus.sdk import Pool as PoolSDK
 from convexus.sdk import CurrencyAmount as CurrencyAmountSDK
 
-class Token(SQLModel):
+class Token(BaseModel):
   address: str
   decimals: int
   name: str
@@ -24,7 +24,7 @@ class Token(SQLModel):
       symbol=token.symbol
     )
 
-class Pool(SQLModel):
+class Pool(BaseModel):
   token0: Token
   token1: Token
   fee: int
@@ -43,7 +43,7 @@ class Pool(SQLModel):
       tickCurrent=pool.tickCurrent
     )
 
-class Route(SQLModel):
+class Route(BaseModel):
   pools: List[Pool]
   tokenPath: List[Token]
   input: Token
@@ -58,7 +58,7 @@ class Route(SQLModel):
       output=Token.from_sdk(route.output)
     )
 
-class CurrencyAmount(SQLModel):
+class CurrencyAmount(BaseModel):
   numerator: BigintIsh
   denominator: BigintIsh
   currency: Token
@@ -73,8 +73,7 @@ class CurrencyAmount(SQLModel):
       decimalScale=hex(amount.decimalScale)
     )
 
-
-class RouteInfo(SQLModel):
+class RouteInfo(BaseModel):
   route: Route
   inputAmount: CurrencyAmount
   outputAmount: CurrencyAmount
@@ -87,7 +86,7 @@ class RouteInfo(SQLModel):
       outputAmount=CurrencyAmount.from_sdk(swap.outputAmount),
     )
 
-class Trade(SQLModel):
+class Trade(BaseModel):
   swaps: List[RouteInfo]
   tradeType: int
   
@@ -97,4 +96,3 @@ class Trade(SQLModel):
       swaps=list(map(RouteInfo.from_sdk, trade.swaps)),
       tradeType=int(trade.tradeType.value)
     )
-

@@ -21,5 +21,9 @@ def set_token(*, token: TokenSet):
   else:
     session.add(Token.from_orm(token))
   
-  session.commit()
+  try:
+    session.commit()
+  except:
+    pass
+
   session.close()

@@ -1,12 +1,12 @@
-import asyncio
+import asyncio, multiprocessing
+from typing import List
 from loguru import logger
-
 from api.public.client import Client as RestPublicClient
+from database.models.pool import PoolGet
 from settings import SpawnerSettings
 from syncs.pools import start as pools_start
 from syncs.ticks import start as ticks_start
 from syncs.intrinsics import start as intrinsics_start
-import multiprocessing
 
 logger.add(SpawnerSettings.logfile)
 
@@ -19,8 +19,8 @@ def create_ticks_process(address):
 def create_intrinsics_process(address):
   multiprocessing.Process(target=intrinsics_start, args=(address,)).start()
 
-def get_pool_addresses(result: dict) -> set:
-  return set([pool['address'] for pool in result['pools']])
+def get_pool_addresses(result: List[PoolGet]) -> set:
+  return set([pool.address for pool in result])
 
 async def main():
   rest_client = RestPublicClient()
@@ -45,7 +45,7 @@ async def main():
     # Spawn new addresses
     diff_addresses = new_addresses.difference(addresses)
     for address in diff_addresses:
-      logger.info(f"Spawning new {address} processes")
+      logger.info(f"Spawning new {address}")
       create_ticks_process(address)
       create_intrinsics_process(address)
 

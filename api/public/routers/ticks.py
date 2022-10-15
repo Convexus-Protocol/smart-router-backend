@@ -1,4 +1,4 @@
-from database.models.tick import Tick, TickRead
+from database.models.tick import Tick, TickGet
 from api.dependencies import get_database_session
 from fastapi import APIRouter, HTTPException, Depends
 
@@ -9,7 +9,7 @@ router = APIRouter (
   dependencies=[Depends(get_database_session)]
 )
 
-@router.get("/get", response_model=TickRead)
+@router.get("/get", response_model=TickGet)
 async def read_tick(*, pool_address: str, tick_index: int):
   session = next(router.dependencies[0].dependency())
   tick = session.get(Tick, (tick_index, pool_address))
