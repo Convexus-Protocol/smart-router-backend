@@ -1,7 +1,7 @@
 wheel
 sqlmodel
 fastapi
-uvicorn[standard]
+uvicorn
 iconsdk
 requests
 convexus
