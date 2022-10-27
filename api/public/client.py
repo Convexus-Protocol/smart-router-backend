@@ -13,7 +13,7 @@ class Client:
   def pools_get_all(self) -> List[PoolGet]:
     return list(map(
       lambda x: PoolGet(**x),
-      json.loads(requests.get(self.endpoint + "/pools/get_all").text)))
+      json.loads(requests.get(self.endpoint + "/pools/").text)))
 
   def tokens_get(self, address: str):
-    return requests.get(self.endpoint + "/tokens/get", params={'token_address': address})
+    return requests.get(self.endpoint + f"/tokens/{address}")

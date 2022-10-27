@@ -9,7 +9,7 @@ router = APIRouter (
   dependencies=[Depends(get_database_session)]
 )
 
-@router.get("/get", response_model=TickGet)
+@router.get("/{pool_address}/{tick_index}", response_model=TickGet)
 async def read_tick(*, pool_address: str, tick_index: int):
   session = next(router.dependencies[0].dependency())
   tick = session.get(Tick, (tick_index, pool_address))

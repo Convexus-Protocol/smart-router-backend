@@ -10,7 +10,7 @@ router = APIRouter (
   dependencies=[Depends(get_database_session)]
 )
 
-@router.get("/get", response_model=SyncGet)
+@router.get("/{name}'", response_model=SyncGet)
 async def read_sync(*, name: str):
   session = next(router.dependencies[0].dependency())
   sync = session.get(Sync, name)

@@ -34,7 +34,7 @@ def get_latest_intrinsics(session: Session, pool_address: str) -> IntrinsicsBase
       liquidity=hex(0)
     )
 
-@router.get("/get", response_model=PoolGet)
+@router.get("/{pool_address}", response_model=PoolGet)
 async def read_pool(*, pool_address: str):
   session = next(router.dependencies[0].dependency())
   pool = session.get(Pool, pool_address)
@@ -49,10 +49,15 @@ async def read_pool(*, pool_address: str):
     **intrinsics.__dict__
   )
 
-@router.get("/get_all", response_model=List[PoolGet])
-async def read_pools():
+@router.get("/", response_model=List[PoolGet])
+async def read_pools(*, offset: int = 0):
   session = next(router.dependencies[0].dependency())
-  pools = session.exec(select(Pool)).all()
+  pools = session.exec(
+    select(Pool)
+    .offset(offset)
+    .limit(1000)
+  ).all()
+  
   intrinsics = list(map(lambda r: get_latest_intrinsics(session, r), pools))
   return list(map(
     lambda pi: 

@@ -35,7 +35,7 @@ class RoutingPoolFactoryProvider(PoolFactoryProvider):
     raise Exception("Pool not found")
 
 
-@router.get("/bestTradeExactIn", response_model=List[TradeResponse])
+@router.get("/bestTradeExactIn/{currencyInAddress}/{currencyOutAddress}/{currencyAmountIn}", response_model=List[TradeResponse])
 async def bestTradeExactIn(*, currencyInAddress: str, currencyOutAddress: str, currencyAmountIn: int):
   session = next(router.dependencies[0].dependency())
 

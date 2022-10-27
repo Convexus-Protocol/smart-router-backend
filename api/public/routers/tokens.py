@@ -9,7 +9,7 @@ router = APIRouter (
   dependencies=[Depends(get_database_session)]
 )
 
-@router.get("/get", response_model=TokenGet)
+@router.get("/{token_address}", response_model=TokenGet)
 async def read_token(*, token_address: str):
   session = next(router.dependencies[0].dependency())
   token = session.get(Token, token_address)

@@ -13,7 +13,7 @@ class Client:
     self.endpoint = f"http://{AdminPoolsSettings.host}:{AdminPoolsSettings.port}"
 
   def syncs_get(self, name: str):
-    return requests.get(self.endpoint + "/syncs/get", params={'name': name})
+    return requests.get(self.endpoint + f"/syncs/{name}")
 
   def syncs_set(self, data: SyncSet):
     return requests.post(self.endpoint + "/syncs/set", data=json.dumps(data.__dict__))

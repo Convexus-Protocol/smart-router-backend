@@ -12,7 +12,7 @@ router = APIRouter (
   dependencies=[Depends(get_database_session)]
 )
 
-@router.get("/get", response_model=List[IntrinsicsGet])
+@router.get("/{pool_address}", response_model=List[IntrinsicsGet])
 async def read_intrinsics(*, pool_address: str, timestamp: int, offset: int = 0):
   session = next(router.dependencies[0].dependency())
   intrinsics: Intrinsics = session.exec(
