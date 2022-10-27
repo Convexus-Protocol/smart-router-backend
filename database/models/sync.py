@@ -11,7 +11,7 @@ class Sync(SyncBase, table=True):
   def exists(session: Session, name: str) -> bool:
     return session.query(exists().where(Sync.name==name)).scalar()
 
-class SyncRead(SyncBase):
+class SyncGet(SyncBase):
   pass
 
 class SyncSet(SyncBase):

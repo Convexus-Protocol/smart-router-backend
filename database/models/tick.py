@@ -11,21 +11,21 @@ class TickBase(SQLModel):
   liquidityGross: BigInt
 
 class Tick(TickBase, table=True):
-  poolAddress: Optional[str] = Field(default=None, foreign_key='pool.address', primary_key=True)
+  pool: Optional[str] = Field(default=None, foreign_key='pool.address', primary_key=True)
 
   @staticmethod
-  def exists(session: Session, index: int, poolAddress: str) -> bool:
-    return session.query(exists().where(Tick.index==index, Tick.poolAddress==poolAddress)).scalar()
+  def exists(session: Session, index: int, pool: str) -> bool:
+    return session.query(exists().where(Tick.index==index, Tick.pool==pool)).scalar()
 
   def to_sdk(self):
     return TickSDK(TickConstructorArgs(self.index, self.liquidityGross, self.liquidityNet)) 
 
-class TickRead(TickBase):
+class TickGet(TickBase):
   pass
 
 class TickSet(TickBase):
-  poolAddress: str
+  pool: str
 
 class TickDelete(SQLModel):
   index: int
-  poolAddress: str
+  pool: str

@@ -13,7 +13,7 @@ rest_client = RestAdminClient()
 
 class SynchronizerTicks(SynchronizerBase):
   async def db_updater(self, queue: asyncio.Queue):
-    height, eventlogs = await queue.get()
+    block, eventlogs = await queue.get()
     
     for eventlog in eventlogs:
       # Parse event
@@ -26,15 +26,15 @@ class SynchronizerTicks(SynchronizerBase):
           index=tickUpdate.index, 
           liquidityNet=hex(tickUpdate.liquidityNet), 
           liquidityGross=hex(tickUpdate.liquidityGross),
-          poolAddress=self.address)
+          pool=self.address)
         rest_client.ticks_set(tickSet)
       else:
         # If not initialized, delete it as it's not relevant anymore for routing
-        tickDelete = TickDelete(index=tickUpdate.index, poolAddress=self.address)
+        tickDelete = TickDelete(index=tickUpdate.index, pool=self.address)
         rest_client.ticks_delete(tickDelete)
         
     # Update Sync height DB
-    syncCreate = SyncSet(name=SynchronizerTicksSettings.syncname, height=height)
+    syncCreate = SyncSet(name=SynchronizerTicksSettings.syncname, height=block['height'])
     rest_client.syncs_set(syncCreate)
 
 def start(address: str):

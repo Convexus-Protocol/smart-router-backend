@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api.admin.routers import syncs, tokens, pools, ticks
+from api.admin.routers import syncs, tokens, pools, ticks, intrinsics
 from api.dependencies import create_database
 
 # Load DB
@@ -11,3 +11,4 @@ app.include_router(syncs.router)
 app.include_router(tokens.router)
 app.include_router(pools.router)
 app.include_router(ticks.router)
+app.include_router(intrinsics.router)

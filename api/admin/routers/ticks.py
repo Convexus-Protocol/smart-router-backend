@@ -14,14 +14,18 @@ router = APIRouter (
 def set_tick(*, tick: TickSet):
   session = next(router.dependencies[0].dependency())
 
-  if Tick.exists(session, tick.index, tick.poolAddress):
+  if Tick.exists(session, tick.index, tick.pool):
     session.exec(update(Tick)
-      .where(Tick.index == tick.index, Tick.poolAddress == tick.poolAddress)
+      .where(Tick.index == tick.index, Tick.pool == tick.pool)
       .values(liquidityNet=tick.liquidityNet, liquidityGross=tick.liquidityGross))
   else:
     session.add(Tick.from_orm(tick))
 
-  session.commit()
+  try:
+    session.commit()
+  except:
+    pass
+
   session.close()
 
 
@@ -29,6 +33,6 @@ def set_tick(*, tick: TickSet):
 def delete_tick(*, tick: TickDelete):
   session = next(router.dependencies[0].dependency())
   session.exec(delete(Tick)
-    .where(Tick.index == tick.index, Tick.poolAddress == tick.poolAddress))
+    .where(Tick.index == tick.index, Tick.pool == tick.pool))
   session.commit()
   session.close()

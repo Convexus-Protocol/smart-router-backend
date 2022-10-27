@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api.public.routers import tokens, pools, ticks, routing
+from api.public.routers import tokens, pools, ticks, routing, intrinsics
 from api.dependencies import create_database
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -26,3 +26,4 @@ app.include_router(tokens.router)
 app.include_router(pools.router)
 app.include_router(ticks.router)
 app.include_router(routing.router)
+app.include_router(intrinsics.router)

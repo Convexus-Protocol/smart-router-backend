@@ -1,22 +1,17 @@
-from database.models.pool import Pool, PoolSet
+from database.models.intrinsics import Intrinsics, IntrinsicsSet
 from api.dependencies import get_database_session
 from fastapi import APIRouter, Depends
 
 router = APIRouter (
-  prefix="/pools",
-  tags=["pools"],
+  prefix="/intrinsics",
+  tags=["intrinsics"],
   responses={404: {"description": "Not found"}},
   dependencies=[Depends(get_database_session)]
 )
 
 @router.post("/set")
-def set_pool(*, pool: PoolSet):
+def set_intrinsics(*, intrinsics: IntrinsicsSet):
   session = next(router.dependencies[0].dependency())
-  session.add(Pool.from_orm(pool))
-
-  try:
-    session.commit()
-  except:
-    pass
-
+  session.add(Intrinsics.from_orm(intrinsics))
+  session.commit()
   session.close()

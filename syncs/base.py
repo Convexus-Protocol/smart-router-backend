@@ -50,7 +50,7 @@ class SynchronizerBase(metaclass=ABCMeta):
           self.height = height + 1
           # Put all the events in a single task in order to modify the DB atomically
           eventlogs = list(map(lambda e: txresult['eventLogs'][int(e, 16)], data['events']))
-          await outqueue.put((self.height, eventlogs))
+          await outqueue.put((block, eventlogs))
       except Exception as e:
         logger.error(repr(e))
 
