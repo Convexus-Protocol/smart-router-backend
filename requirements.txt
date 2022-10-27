@@ -7,3 +7,4 @@ requests
 convexus
 loguru
 types-requests
+websockets
